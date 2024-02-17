@@ -73,7 +73,7 @@ app.delete('/api/vehicles/ireallymeanthis', async (req, res) => {
     try{
         const vehicle = await Vehicle.deleteMany({});
 
-        if (vehicle) {
+        if (!vehicle) {
             return res.status(404).json({message: "No vehicles found... =("});
         }
         res.status(200).json({message: "All vehicles deleted successfully"});
