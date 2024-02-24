@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 async function getBearerToken() {
     const bearerToken = await fetchBearerToken()
-    console.log(bearerToken)
+    console.log(`async function getBearerTOken, index.js: ${bearerToken}`)
 }
 try {
     getBearerToken()
