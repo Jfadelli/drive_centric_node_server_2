@@ -2,6 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Vehicle = require('./models/vehicle.model')
 const { fetchBearerToken } = require('./fetchBearerToken')
+const { getVehicleInfo } = require('./getVehicleInfo'); // Import the getVehicleInfo function
+
+let bearerToken = ""
+
 require('dotenv').config()
 const app = express()
 app.use(express.json())
@@ -17,14 +21,31 @@ app.get('/', (req, res) => {
 });
 
 async function getBearerToken() {
-    const bearerToken = await fetchBearerToken()
-    console.log(`async function getBearerTOken, index.js: ${bearerToken}`)
+    try {
+        console.log(`getting bearer token`);
+        bearerToken = await fetchBearerToken();
+        console.log(`token found: ${bearerToken}`);
+    } catch (error) {
+        console.log(error);
+    }
 }
-try {
-    getBearerToken()
-} catch (error) {
-    console.log(error)
-}
+
+getBearerToken();
+
+
+// Add a new route to get vehicle information from Kdealer using a VIN
+app.get('/api/kdealer/vehicle/:vin', async (req, res) => {
+    try {
+        // console.log(`async function getBearerToken, index.js: ${bearerToken}`)
+        const { vin, bearerToken } = req.params;
+        const vehicleInfo = await getVehicleInfo(vin); // Fetch the vehicle information using the VIN
+        res.status(200).json(vehicleInfo);
+    } catch (error) {
+        console.error(`Error fetching vehicle info for VIN ${req.params.vin}:`, error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Get all vehicles in DB
 app.get(`/api/vehicles/`, async (req, res) => {
     try {
@@ -105,6 +126,9 @@ app.post('/api/vehicle', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+// Get Vehicle from Kdealer
+
 
 
 mongoose.connect(`mongodb+srv://admin:${process.env.DB_PASSWORD}@jigglebits.0bfsdac.mongodb.net/Node-API?retryWrites=true&w=majority`)

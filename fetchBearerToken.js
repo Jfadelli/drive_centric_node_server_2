@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const EventEmitter = require('events');
 require('dotenv').config();
 
-class TokenEmitter extends EventEmitter {}
+class TokenEmitter extends EventEmitter { }
 const tokenEmitter = new TokenEmitter();
 
 async function fetchBearerToken() {
@@ -45,7 +45,7 @@ async function fetchBearerToken() {
   } finally {
     if (browser) {
       await browser.close();
-      // console.log(`Browser closed successfully. Token: ${bearerToken ? bearerToken : "No Token found."}`);
+      console.log(`Browser closed successfully. \n${bearerToken ? "Token Found!" : "No Token found."}`);
     }
   }
   return bearerToken; // Return the bearerToken
