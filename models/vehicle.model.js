@@ -9,6 +9,7 @@ const vehicleSchema = mongoose.Schema(
         optionCode: { type: String, required: true },
         color: { type: String, required: true },
         model: { type: String, required: true },
+        trim: { type: String, required: true },
         vin: { type: String, required: false },
     }
 );
